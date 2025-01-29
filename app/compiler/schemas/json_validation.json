@@ -1,0 +1,597 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "source": {
+      "type": "string",
+      "description": "Here the rival name will come (all in lower case if it is a more than one letter then use '-' as saperator)"
+    },
+    "is_error": {
+      "type": "boolean",
+      "description": "This is a field will get decided by the default compiler. If there is any error in the data and got detected by the compiler then teh value wil be true else false"
+    },
+    "scraped_at_hour": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Date and time of scrapin - format: YYYY-MM-DDThh:00:00Z. Timezone - UTC"
+    },
+    "scraped_at_timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp of when the scraping occurred: - format: YYYY-MM-DDThh:mm:ssZ. Timezone - UTC"
+    },
+    "scraped_for_timestamp": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "Timestamp of when the scheduled trip scheduled in the application: - format: YYYY-MM-DDThh:mm:ssZ. Timezone - UTC"
+    },
+    "country_code": {
+      "enum": [
+        "AF",
+        "AX",
+        "AL",
+        "DZ",
+        "AS",
+        "AD",
+        "AO",
+        "AI",
+        "AQ",
+        "AG",
+        "AR",
+        "AM",
+        "AW",
+        "AU",
+        "AT",
+        "AZ",
+        "BS",
+        "BH",
+        "BD",
+        "BB",
+        "BY",
+        "BE",
+        "BZ",
+        "BJ",
+        "BM",
+        "BT",
+        "BO",
+        "BA",
+        "BW",
+        "BV",
+        "BR",
+        "IO",
+        "BN",
+        "BG",
+        "BF",
+        "BI",
+        "KH",
+        "CM",
+        "CA",
+        "CV",
+        "KY",
+        "CF",
+        "TD",
+        "CL",
+        "CN",
+        "CX",
+        "CC",
+        "CO",
+        "KM",
+        "CG",
+        "CD",
+        "CK",
+        "CR",
+        "CI",
+        "HR",
+        "CU",
+        "CY",
+        "CZ",
+        "DK",
+        "DJ",
+        "DM",
+        "DO",
+        "EC",
+        "EG",
+        "SV",
+        "GQ",
+        "ER",
+        "EE",
+        "ET",
+        "FK",
+        "FO",
+        "FJ",
+        "FI",
+        "FR",
+        "GF",
+        "PF",
+        "TF",
+        "GA",
+        "GM",
+        "GE",
+        "DE",
+        "GH",
+        "GI",
+        "GR",
+        "GL",
+        "GD",
+        "GP",
+        "GU",
+        "GT",
+        "GG",
+        "GN",
+        "GW",
+        "GY",
+        "HT",
+        "HM",
+        "VA",
+        "HN",
+        "HK",
+        "HU",
+        "IS",
+        "IN",
+        "ID",
+        "IR",
+        "IQ",
+        "IE",
+        "IM",
+        "IL",
+        "IT",
+        "JM",
+        "JP",
+        "JE",
+        "JO",
+        "KZ",
+        "KE",
+        "KI",
+        "KP",
+        "KR",
+        "KW",
+        "KG",
+        "LA",
+        "LV",
+        "LB",
+        "LS",
+        "LR",
+        "LY",
+        "LI",
+        "LT",
+        "LU",
+        "MO",
+        "MK",
+        "MG",
+        "MW",
+        "MY",
+        "MV",
+        "ML",
+        "MT",
+        "MH",
+        "MQ",
+        "MR",
+        "MU",
+        "YT",
+        "MX",
+        "FM",
+        "MD",
+        "MC",
+        "MN",
+        "MS",
+        "MA",
+        "MZ",
+        "MM",
+        "NA",
+        "NR",
+        "NP",
+        "NL",
+        "AN",
+        "NC",
+        "NZ",
+        "NI",
+        "NE",
+        "NG",
+        "NU",
+        "NF",
+        "MP",
+        "NO",
+        "OM",
+        "PK",
+        "PW",
+        "PS",
+        "PA",
+        "PG",
+        "PY",
+        "PE",
+        "PH",
+        "PN",
+        "PL",
+        "PT",
+        "PR",
+        "QA",
+        "RE",
+        "RO",
+        "RU",
+        "RW",
+        "SH",
+        "KN",
+        "LC",
+        "PM",
+        "VC",
+        "WS",
+        "SM",
+        "ST",
+        "SA",
+        "SN",
+        "CS",
+        "SC",
+        "SL",
+        "SG",
+        "SK",
+        "SI",
+        "SB",
+        "SO",
+        "ZA",
+        "GS",
+        "ES",
+        "LK",
+        "SD",
+        "SR",
+        "SJ",
+        "SZ",
+        "SE",
+        "CH",
+        "SY",
+        "TW",
+        "TJ",
+        "TZ",
+        "TH",
+        "TL",
+        "TG",
+        "TK",
+        "TO",
+        "TT",
+        "TN",
+        "TR",
+        "TM",
+        "TC",
+        "TV",
+        "UG",
+        "UA",
+        "AE",
+        "GB",
+        "US",
+        "UM",
+        "UY",
+        "UZ",
+        "VU",
+        "VE",
+        "VN",
+        "VG",
+        "VI",
+        "WF",
+        "EH",
+        "YE",
+        "ZM",
+        "ZW"
+      ],
+      "type": "string",
+      "description": "country of the rival of the rival"
+    },
+    "city": {
+      "type": "string",
+      "description": "Pickup or drop-off city of the rival"
+    },
+    "distance_bucket": {
+      "type": ["string", "null"],
+      "description": "Here is distance bucket we the type of distance - short, long and medium"
+    },
+    "route_type": {
+      "enum": [
+        "airport",
+        "non-airport",
+        "non_airport",
+        "from_airport",
+        "to_airport",
+        "client",
+        "non-airport 0-3",
+        "non-airport 4-10",
+        "non-airport 11-20",
+        "non-airport 20+"
+      ],
+      "type": "string",
+      "description": "the type of route exp: airport or non_airport"
+    },
+    "pickup_latitude": {
+      "type": "number",
+      "minimum": -90,
+      "maximum": 90,
+      "description": "Latitude of the pickup location"
+    },
+    "pickup_longitude": {
+      "type": "number",
+      "minimum": -180,
+      "maximum": 180,
+      "description": "Longitude of the pickup location"
+    },
+    "pickup_zone": {
+      "type": "string",
+      "description": "The zone of the pickup location"
+    },
+    "pickup_address": {
+      "type": ["string", "null"],
+      "description": "Full address of the pickup location"
+    },
+    "drop_latitude": {
+      "type": "number",
+      "minimum": -90,
+      "maximum": 90,
+      "description": "Latitude of the drop-off location"
+    },
+    "drop_longitude": {
+      "type": "number",
+      "minimum": -180,
+      "maximum": 180,
+      "description": "Longitude of the drop-off location"
+    },
+    "route_distance": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "description": "distance of the route picked by the rival"
+    },
+    "rival_route_distance": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "description": "distance of the route picked provided the rival"
+    },
+    "drop_zone": {
+      "type": "string",
+      "description": "The zone of the drop-off location"
+    },
+    "drop_address": {
+      "type": ["string", "null"],
+      "description": "Full address of the drop-off location"
+    },
+    "vehicle_name": {
+      "type": ["string", "null"],
+      "minimum": 1,
+      "description": "The name of the vehicle. Exp: Toyota (2014)"
+    },
+    "vehicle_category": {
+      "type": "string",
+      "minimum": 1,
+      "description": "The category of the vehicle or category of the service"
+    },
+    "vehicle_id": {
+      "type": "string",
+      "description": "Ths id of the vehicle or the service/category id"
+    },
+    "vehicle_capacity": {
+      "type": ["integer", "null"],
+      "minimum": 0,
+      "description": "The number of passesnger can sit in the vehicle"
+    },
+    "tag_line": {
+      "type": ["string", "null"],
+      "description": "The tag line wrritten for the vehicle or the service"
+    },
+    "is_fixed_fare": {
+      "type": ["boolean", "null"],
+      "description": "True if the fare exists as a fixed value, false if it exists as a range"
+    },
+    "surge_multiplier": {
+      "type": ["number", "null"],
+      "minimum": 1,
+      "description": "Surge multiplier"
+    },
+    "fare_range_string": {
+      "type": ["string", "null"],
+      "description": "If <> is_fixed_fare <> is false then put the string of fare range here"
+    },
+    "currency": {
+      "type": "string",
+      "description": "Currency used for fares"
+    },
+    "upfront_fare": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "description": "Final fare displayed if the fare is fixed if not then put the average of the range fare here"
+    },
+    "min_fare": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "description": "Minimum fare if the fare is given in a range else put the copy of fixed fare here"
+    },
+    "max_fare": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "description": "Maximum fare if the fare is given in a range else put the copy of fixed fare here"
+    },
+    "base_fare": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "description": "if the base fare provided by the rival then put here. Above this fare the extra chrgaes will get included"
+    },
+    "minimum_charge": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "description": "Minimum charge for any ride if exist else null"
+    },
+    "cancellation_charge": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "description": "Cancellation charge asked by the taxy if exist else null"
+    },
+    "per_distance_charge": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "description": "Charge per kilometer if exist else null"
+    },
+    "per_minute_wait_charge": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "description": "Charge per minute applied for any waiting after wait time threshold minute if exist else null"
+    },
+    "per_minute_ride_charge": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "description": "Charge per minute applied for any ride if exist else null"
+    },
+    "safe_ride_charge": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "description": "Uber safe ride charge if exist else null"
+    },
+    "other_charge": {
+      "type": "array",
+      "description": "This is the list of the dictionary where we can define all type of other charges exist in the rival",
+      "items": {
+        "type": "object",
+        "properties": {
+          "charge_type": {
+            "type": "string",
+            "description": "Here define the name of the other charge that is not included in the schema of bolt with snake case"
+          },
+          "value": {
+            "type": "number",
+            "description": "Here define the value of that other charge"
+          }
+        },
+        "required": ["charge_type", "value"]
+      }
+    },
+    "other_time": {
+      "type": "array",
+      "description": "This is the list of the dictionary where we can define all type of other time exist in the rival",
+      "items": {
+        "type": "object",
+        "properties": {
+          "time_type": {
+            "type": "string",
+            "description": "Here define the name of the other charge that is not included in the schema of bolt with snake case"
+          },
+          "value": {
+            "type": "number",
+            "description": "Here define the value of that other charge"
+          }
+        },
+        "required": ["time_type", "value"]
+      }
+    },
+    "other_distance": {
+      "type": "array",
+      "description": "This is the list of the dictionary where we can define all type of other distance exist in the rival",
+      "items": {
+        "type": "object",
+        "properties": {
+          "distance_type": {
+            "type": "string",
+            "description": "Here define the name of the other charge that is not included in the schema of bolt with snake case"
+          },
+          "value": {
+            "type": "number",
+            "description": "Here define the value of that other charge"
+          }
+        },
+        "required": ["distance_type", "value"]
+      }
+    },
+    "vehicle_eta": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "description": "Vehicle ETA in seconds. This time indicates the time shown by rival in which vehicle will reach to the passesnger (in seconds)"
+    },
+    "estimated_trip_time": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "description": "Time to reach the destination in seconds once the vehicle is picked / passesnger is boarded on the vehicle / ride started (in seconds)"
+    },
+    "estimated_total_trip_time": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "description": "Total trip time = estimated_trip_time + vehicle_eta"
+    },
+    "threshold_wait_time": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "description": "Maximum wait time in seconds until when there will be no extra charge (in seconds)"
+    },
+    "threshold_cancel_time_by_driver": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "description": "Time in seconds allowed for the driver to cancel the ride (in seconds)"
+    },
+    "threshold_cancel_time_by_passenger": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "description": "Time in seconds allowed for the rider to cancel the ride (in seconds)"
+    },
+    "threshold_distance_by_passenger": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "description": "Maximum distance for a pickup point from the user's location"
+    },
+    "sorry_message": {
+      "type": ["string", "null"],
+      "description": "Message displayed on the app if the vehicle is not available"
+    },
+    "client": {
+      "type": ["string", "null"],
+      "description": "Here the client name will come. It will be in lower case, if has the mutiple letters then do the saperation by underscore(_)"
+    },
+    "is_surged": {
+      "type": ["boolean", "null"],
+      "description": "if field found in the rival then the value will be true or false else will be null"
+    },
+    "serviceable": {
+      "type": ["boolean", "null"],
+      "description": "serviceable will be false only for cases where No rides are available and  vehicle_category will be NA otherwise serviceable will be true "
+    },
+    "remarks": {
+      "type": ["string", "null"],
+      "description": "If found remarks for the rival else it will be null"
+    }
+  },
+  "required": [
+    "source",
+    "scraped_at_hour",
+    "scraped_at_timestamp",
+    "country_code",
+    "city",
+    "route_type",
+    "pickup_latitude",
+    "pickup_longitude",
+    "pickup_zone",
+    "pickup_address",
+    "drop_latitude",
+    "drop_longitude",
+    "route_distance",
+    "drop_zone",
+    "drop_address",
+    "vehicle_name",
+    "vehicle_category",
+    "vehicle_id",
+    "vehicle_capacity",
+    "tag_line",
+    "is_fixed_fare",
+    "surge_multiplier",
+    "fare_range_string",
+    "currency",
+    "upfront_fare",
+    "min_fare",
+    "max_fare",
+    "base_fare",
+    "minimum_charge",
+    "cancellation_charge",
+    "per_distance_charge",
+    "per_minute_wait_charge",
+    "per_minute_ride_charge",
+    "safe_ride_charge",
+    "other_charge",
+    "vehicle_eta",
+    "estimated_trip_time",
+    "estimated_total_trip_time",
+    "threshold_wait_time",
+    "threshold_cancel_time_by_driver",
+    "threshold_cancel_time_by_passenger",
+    "threshold_distance_by_passenger",
+    "sorry_message",
+    "client"
+  ]
+}
