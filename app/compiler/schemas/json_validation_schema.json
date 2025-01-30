@@ -275,7 +275,7 @@
       "description": "country of the rival of the rival"
     },
     "city": {
-      "type": "string",
+      "type": ["string", "null"],
       "description": "Pickup or drop-off city of the rival"
     },
     "distance_bucket": {
@@ -311,7 +311,7 @@
       "description": "Longitude of the pickup location"
     },
     "pickup_zone": {
-      "type": "string",
+      "type": ["string", "null"],
       "description": "The zone of the pickup location"
     },
     "pickup_address": {
@@ -341,7 +341,7 @@
       "description": "distance of the route picked provided the rival"
     },
     "drop_zone": {
-      "type": "string",
+      "type": ["string", "null"],
       "description": "The zone of the drop-off location"
     },
     "drop_address": {
@@ -359,7 +359,7 @@
       "description": "The category of the vehicle or category of the service"
     },
     "vehicle_id": {
-      "type": "string",
+      "type": ["string", "null"],
       "description": "Ths id of the vehicle or the service/category id"
     },
     "vehicle_capacity": {
@@ -457,7 +457,7 @@
       }
     },
     "other_time": {
-      "type": "array",
+      "type": ["array", "null"],
       "description": "This is the list of the dictionary where we can define all type of other time exist in the rival",
       "items": {
         "type": "object",

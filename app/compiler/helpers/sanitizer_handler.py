@@ -190,13 +190,14 @@ class SanitizerHandler:
             error_message = None
 
             try:
-                schema_copy = self.utils.get_type_casted_schema(schema)
+                schema_copy = self.utils.get_type_casted_schema(validation_schema["properties"])
+                del schema_copy["logger"]
             except Exception as e:
                 print(f"Error in schema type casting: {str(e)}")
                 return None
 
             try:
-                spec = importlib.util.spec_from_file_location("sanitizer", "path_to_sanitizer")
+                spec = importlib.util.spec_from_file_location("sanitizer", f"app/compiler/sanitizers/{yaml_data['rival']}.py")
                 sanitizer_module = importlib.util.module_from_spec(spec)
                 spec.loader.exec_module(sanitizer_module)
             except Exception as e:
@@ -221,6 +222,8 @@ class SanitizerHandler:
 
                     for field in yaml_data.get('to_extract', []):
                         try:
+                            if field == 'logger':
+                                continue
                             key = field['key_name']
                             value = extracted_data.get(key, [])
                             fallback_value = extracted_data.get(f'{key}_fallback', None)

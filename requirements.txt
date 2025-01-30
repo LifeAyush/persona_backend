@@ -2,4 +2,4 @@ fastapi
 uvicorn
 pydantic
 pytest
-yaml
+pyyaml==6.0.2

@@ -191,7 +191,7 @@ class Utils:
 
                     try:
                         if data_type == "string":
-                            setattr(self, key, "RandomString")
+                            setattr(self, key, "")
 
                         elif data_type == "integer":
                             minimum = value.get("minimum", 1)
@@ -215,10 +215,10 @@ class Utils:
                             setattr(self, key, random.choice([True, False]))
 
                         elif data_type == "array":
-                            setattr(self, key, ["Item1", "Item2"])
+                            setattr(self, key, [])
 
                         elif data_type == "dict":
-                            setattr(self, key, {"random_key": "random_value"})
+                            setattr(self, key, {})
 
                         else:
                             self.logger.warning(f"Unknown data type '{data_type}' for key '{key}', setting to None")

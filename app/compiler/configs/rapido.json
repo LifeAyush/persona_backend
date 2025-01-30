@@ -1,5 +1,6 @@
 {
   "rival": "rapido",
+  "client": "",
   "country_code": [
     "IN"
   ],
@@ -96,7 +97,10 @@
     },
     {
       "key_name": "is_fixed_fare",
-      "key_field_path": "$.['quotes'][*]['type']"
+      "key_field_path": "$.['quotes'][*]['type']",
+      "sanitizer": {
+        "function": "parse_fixed_fare"
+      }
     },
     {
       "key_name": "vehicle_eta",
@@ -108,13 +112,6 @@
     {
       "key_name": "per_minute_wait_charge",
       "key_field_path": "$.['quotes'][*]['amountBreakup']['waitTimeCharges']['total']"
-    },
-    {
-      "key_name": "estimated_trip_time",
-      "key_field_path": "$.['quotes'][*]",
-      "sanitizer": {
-        "function": "get_dropEtaInMin"
-      }
     },
     {
       "key_name": "safe_ride_charge",

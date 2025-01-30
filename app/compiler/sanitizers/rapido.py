@@ -35,3 +35,6 @@ def get_per_distance_charge(data):
 def per_minute_ride_charge(data):
     per_minute_ride_charge = data.get("amountBreakup", {}).get("timeFare", {}).get("unit", None)
     return per_minute_ride_charge
+
+def parse_fixed_fare(data):
+    return data == "FIXED"

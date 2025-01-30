@@ -2,7 +2,7 @@ import yaml
 import logging
 from typing import Optional, Any, Tuple, Union
 from dataclasses import dataclass
-from helpers import JsonDataExtractor, Fetcher, SanitizerHandler
+from .helpers import JsonDataExtractor, Fetcher, SanitizerHandler
 
 @dataclass
 class CompilerResponse:
@@ -221,8 +221,8 @@ class GenericCompiler:
                 self.logger.error(f"Error during data processing: {str(e)}")
                 return None
 
-            if not parser_response.error:
-                return parser_response.compiled_data
+            if not parser_response.get("error"):
+                return parser_response.get("compiled_data")
             else:
                 self.logger.error(f"Compilation error: {parser_response.error_message}")
                 return None
