@@ -1,118 +1,98 @@
 import os
 import gzip
-import requests
 import json
 import logging
 import random
-from datetime import datetime
+import requests
 from datetime import datetime, timezone
 from ..base import Scraper as BaseScraper
 from .tokens import tokens_list
-from ...loader.scarper_loader import ScraperLoader
-from ...config import ENABLED_APPS
-from concurrent.futures import ThreadPoolExecutor, as_completed
 
 class Scraper(BaseScraper):
+    BASE_URL = "https://customer.rapido.bike/android/fare/estimates"
+    APP_VERSION = "8.42.0"
+    APP_VERSION_CODE = "431"
+    APP_KEY = "r@pido333"
+    DEFAULT_DEVICE_ID = "ff1bb73feda43c9e"
+    
     def __init__(self):
         self.name = "rapido"
         self.auth_token = random.choice(tokens_list)
-        self.device_id = 'ff1bb73feda43c9e'
-        self.key = 'r@pido333'
-        self.current_time = datetime.now(tz=timezone.utc).strftime("%H-00")
-        self.current_hour = datetime.now(tz=timezone.utc).strftime("%Y-%m-%dT%H-00-00Z")
-        self.current_timestamp = datetime.now(tz=timezone.utc).strftime("%Y-%m-%dT%H-%M-%SZ")
-        self.current_date = datetime.now(tz=timezone.utc).strftime("%Y-%m-%d")
-        self.base_folder = f"data/rapido"
-        self.make_folders(self.base_folder, self.current_date, self.current_time)
+        self.device_id = self.DEFAULT_DEVICE_ID
+        self._setup_timestamps()
+        self._setup_directories()
         
-    def make_folders(self,base_folder, current_date, current_time):
-        # Making all the directories required
-        raw_folder = f"{base_folder}/raw"
-        raw_date_time_folder = f"{raw_folder}/{current_date}/{current_time}"
-        compile_folder_path = f"{base_folder}/compile"
-        compile_date_time_folder = f"{compile_folder_path}/{current_date}/{current_time}"
-        compressFolder = f"{base_folder}/compressed"
-        try:
-            self.create_directory(raw_date_time_folder)
-            self.create_directory(compile_date_time_folder)
-            self.create_directory(compressFolder)
-        except Exception as e:
-            logging.error(f"Error in creating directories: {e}")    
-    
-    def create_directory(self,folder_path):
+    def _setup_timestamps(self):
+        now = datetime.now(tz=timezone.utc)
+        self.current_time = now.strftime("%H-00")
+        self.current_hour = now.strftime("%Y-%m-%dT%H-00-00Z")
+        self.current_timestamp = now.strftime("%Y-%m-%dT%H-%M-%SZ")
+        self.current_date = now.strftime("%Y-%m-%d")
+        
+    def _setup_directories(self):
+        self.base_folder = "data/rapido"
+        folders = [
+            f"{self.base_folder}/raw/{self.current_date}/{self.current_time}",
+            f"{self.base_folder}/compile/{self.current_date}/{self.current_time}",
+            f"{self.base_folder}/compressed"
+        ]
+        for folder in folders:
+            self._create_directory(folder)
+            
+    def _create_directory(self, folder_path):
         try:
             os.makedirs(folder_path, exist_ok=True)
-            logging.info(f"Directory {folder_path} created succesfully!")
+            logging.info(f"Directory created: {folder_path}")
         except Exception as e:
-            logging.error(f"Error in creating {folder_path} err is: {e}")
-        
-    def scrape(self, route: dict, account_manager: object= None)-> dict:
-        logging.info(f"Scraping started for: {route.get('pickup_latitude')}, {route.get('pickup_longitude')}, {route.get('drop_latitude')}, {route.get('drop_longitude')}")
-        raw_data = self.get_data(route)
-        return {
-            "raw_data": raw_data
-        }
-        # scraping_status = raw_data.pop("status")
-        # if scraping_status:
-        #     return {
-        #         "filesMapping" : [
-        #             {
-        #                 "file_code": "API_RESPONSE_WITH_METADATA",
-        #                 "file_description": "Scraped API Responses",
-        #                 **raw_data
-        #             }
-        #         ],
-        #         "status" : True,
-        #     }
-        # else:
-        #     return {
-        #         "status": False,
-        #         "status_code": raw_data.get("status_code")
-        #     }
+            logging.error(f"Failed to create directory {folder_path}: {e}")
+            
+    def scrape(self, route: dict, account_manager: object = None) -> dict:
+        logging.info(f"Starting scrape for coordinates: {route.get('pickup_latitude')}, {route.get('pickup_longitude')}")
+        raw_data = self._get_data(route)
+        return {"raw_data": raw_data}
     
-    def get_data(self,routes):
+    def _get_data(self, route):
         try:
-            pickup_lat = routes.get('pickup_latitude')
-            pickup_lng = routes.get('pickup_longitude')
-            drop_lat = routes.get('drop_latitude')
-            drop_lng = routes.get('drop_longitude')
-            city = routes.get('city')
-            raw_data = self.get_fare_estimate(pickup_lat, pickup_lng, drop_lat, drop_lng,city)
-            response = self.fill_response(raw_data , routes, self.current_hour, self.current_timestamp)
-            new_compressed_file_path = f"""{routes.get("pickup_latitude")}_{routes.get("pickup_longitude")}_{routes.get("drop_latitude")}_{routes.get("drop_longitude")}.json.gz"""
-            compressed_data = gzip.compress(json.dumps(response).encode('utf-8'))
-            directory = f"{self.base_folder}/raw/{self.current_date}/{self.current_time}"
-            os.makedirs(directory, exist_ok=True)
-            compressed_file_path = f'{directory}/{routes.get("pickup_latitude")}_{routes.get("pickup_longitude")}_{routes.get("drop_latitude")}_{routes.get("drop_longitude")}.json.gz'
-            with open(compressed_file_path, "wb") as file:
-                file.write(compressed_data)
-            current_date_time = datetime.now(tz=timezone.utc)
+            raw_data = self._get_fare_estimate(
+                route.get('pickup_latitude'),
+                route.get('pickup_longitude'),
+                route.get('drop_latitude'),
+                route.get('drop_longitude'),
+                route.get('city')
+            )
+            
+            response = self._fill_response(raw_data, route)
+            self._save_compressed_response(response, route)
             return raw_data
-            # return {
-            #         "status": True,
-            #         "file_path": compressed_file_path,
-            #         "suffix_key": new_compressed_file_path,
-            #         "scraped_at": current_date_time.strftime("%Y-%m-%dT%H:%M:%SZ"),
-            #         "scraped_at_hour": current_date_time.strftime("%Y-%m-%dT%H:00:00Z"),
-            #         "country_code": routes.get("country_code"),
-            #     }
+            
         except Exception as e:
-            logging.error(f"Error in get_data function: {e}")
-            return {
-                "status": False
-            }        
-
-    def get_fare_estimate(self, pickup_lat: float, pickup_lng: float, drop_lat: float, drop_lng: float,city):
-        url = "https://customer.rapido.bike/android/fare/estimates"
-
-        headers = {
+            logging.error(f"Data retrieval failed: {e}")
+            return {"status": False}
+            
+    def _get_fare_estimate(self, pickup_lat: float, pickup_lng: float, drop_lat: float, drop_lng: float, city: str):
+        headers = self._build_headers(pickup_lat, pickup_lng, city)
+        payload = self._build_payload(pickup_lat, pickup_lng, drop_lat, drop_lng, city)
+        
+        for attempt in range(3):
+            try:
+                response = requests.post(self.BASE_URL, headers=headers, json=payload)
+                if response.status_code == 200:
+                    return response.json()
+            except Exception as e:
+                logging.error(f"Attempt {attempt + 1} failed: {e}")
+                
+        logging.error("All fare estimate attempts failed")
+        return None
+        
+    def _build_headers(self, pickup_lat, pickup_lng, city):
+        return {
             'accept': 'application/json,application/protobuf',
-            'accept-charset': 'UTF-8,ISO-8859-1;q=0.1',
+            'accept-charset': 'UTF-8,ISO-859-1;q=0.1',
             'accept-encoding': 'gzip',
             'app_variant': 'v8',
             'appid': '2',
-            'appversion': '431',
-            'appversionstring': '8.42.0',
+            'appversion': self.APP_VERSION_CODE,
+            'appversionstring': self.APP_VERSION,
             'authorization': self.auth_token,
             'channel-entity': 'customer',
             'channel-host': 'android',
@@ -123,13 +103,14 @@ class Scraper(BaseScraper):
             'currentdatetime': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
             'deviceid': self.device_id,
             'host': 'customer.rapido.bike',
-            'key': self.key,
+            'key': self.APP_KEY,
             'latitude': str(pickup_lat),
             'longitude': str(pickup_lng),
             'user-agent': 'Ktor client'
         }
-
-        payload = json.dumps({
+        
+    def _build_payload(self, pickup_lat, pickup_lng, drop_lat, drop_lng, city):
+        return {
             "pickupLocation": {
                 "lat": pickup_lat,
                 "lng": pickup_lng,
@@ -151,49 +132,41 @@ class Scraper(BaseScraper):
             "currentCity": city,
             "skipMultiFareEstimates": False,
             "skipSnapToRoad": True
-        })
-
-        for i in range(3):  # Retry mechanism
-            print(f"Attempt {i + 1}: Requesting fare estimate...")
-            response = requests.post(url, headers=headers, data=payload)
-            # print(f"Response {response.status_code}: {response.text}")
-            if response.status_code == 200:
-                result = {}
-                try:
-                    response_json = response.json()  # Extract JSON data from response
-                    return response_json
-                except ValueError:
-                    print("Failed to parse response as JSON")
-                    response_json = response.json() 
-                    return response_json
-
-        print("Failed to fetch fare estimate after 3 retries.")
-        return None
-    
-    def fill_response(self,response, route_data, current_hour, current_timestamp):
+        }
+        
+    def _fill_response(self, response, route_data):
         try:
-            response['source'] = "rapido"
-            response["pickup_zone"] = route_data.get("pickup_zone")
-            response['pickup_latitude'] = route_data.get("pickup_latitude")
-            response['pickup_longitude'] = route_data.get("pickup_longitude")
-            response['drop_latitude'] = route_data.get("drop_latitude")
-            response['drop_longitude'] = route_data.get("drop_longitude")
-            response["drop_zone"] = route_data.get("drop_zone")
-            response["city"] = route_data.get("city")
-            response["country_code"] = route_data.get("country_code")
-            response["route_type"] = route_data.get("route_type")
-            response['scraped_at_hour'] = current_hour
-            response['scraped_at_timestamp'] = current_timestamp
-            response['client'] = "namma_yatri"
-            response['payload_distance'] = route_data.get('distance')
-            response['route_id'] = f'{current_hour}-{route_data.get("pickup_latitude")}-{route_data.get("pickup_longitude")}-{route_data.get("drop_latitude")}-{route_data.get("drop_longitude")}'
-            logging.info(
-                f'Filled the response with the required details for the location: {route_data.get("pickup_latitude")}, {route_data.get("pickup_longitude")}, {route_data.get("drop_latitude")}, {route_data.get("drop_longitude")}\n Data: {response}')
+            response.update({
+                'source': "rapido",
+                'pickup_zone': route_data.get("pickup_zone"),
+                'pickup_latitude': route_data.get("pickup_latitude"),
+                'pickup_longitude': route_data.get("pickup_longitude"),
+                'drop_latitude': route_data.get("drop_latitude"),
+                'drop_longitude': route_data.get("drop_longitude"),
+                'drop_zone': route_data.get("drop_zone"),
+                'city': route_data.get("city"),
+                'country_code': route_data.get("country_code"),
+                'route_type': route_data.get("route_type"),
+                'scraped_at_hour': self.current_hour,
+                'scraped_at_timestamp': self.current_timestamp,
+                'client': "namma_yatri",
+                'payload_distance': route_data.get('distance'),
+                'route_id': f'{self.current_hour}-{route_data.get("pickup_latitude")}-{route_data.get("pickup_longitude")}-{route_data.get("drop_latitude")}-{route_data.get("drop_longitude")}'
+            })
+            return response
         except Exception as e:
-            message = f'<<SPOT>>Error occurred in fill_response for location: {route_data.get("pickup_latitude")}, {route_data.get("pickup_longitude")}, {route_data.get("drop_latitude")}, {route_data.get("drop_longitude")}, Continuing to the next request!'
-            self.send_slack_message(message)
-            # print(message)
-            logging.error(message)
-        return response
-
-    
+            logging.error(f"Response filling failed for coordinates {route_data.get('pickup_latitude')}, {route_data.get('pickup_longitude')}: {e}")
+            return response
+            
+    def _save_compressed_response(self, response, route):
+        filename = f"{route.get('pickup_latitude')}_{route.get('pickup_longitude')}_{route.get('drop_latitude')}_{route.get('drop_longitude')}.json.gz"
+        directory = f"{self.base_folder}/raw/{self.current_date}/{self.current_time}"
+        file_path = f"{directory}/{filename}"
+        
+        try:
+            compressed_data = gzip.compress(json.dumps(response).encode('utf-8'))
+            with open(file_path, "wb") as file:
+                file.write(compressed_data)
+            logging.info(f"Compressed response saved: {file_path}")
+        except Exception as e:
+            logging.error(f"Failed to save compressed response: {e}")
