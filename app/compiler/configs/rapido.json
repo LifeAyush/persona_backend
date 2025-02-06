@@ -10,14 +10,6 @@
       "key_field_path": "$.source"
     },
     {
-      "key_name": "scraped_at_hour",
-      "key_field_path": "$.scraped_at_hour"
-    },
-    {
-      "key_name": "scraped_at_timestamp",
-      "key_field_path": "$.scraped_at_timestamp"
-    },
-    {
       "key_name": "country_code",
       "key_field_path": "$.country_code"
     },
@@ -38,35 +30,12 @@
       "key_field_path": "$.pickup_longitude"
     },
     {
-      "key_name": "pickup_zone",
-      "key_field_path": "$.pickup_zone"
-    },
-    {
-      "key_name": "pickup_address",
-      "key_field_path": "$.['quotes'][*]['pickupLocation']['address']"
-    },
-    {
       "key_name": "drop_latitude",
       "key_field_path": "$.drop_latitude"
     },
     {
       "key_name": "drop_longitude",
       "key_field_path": "$.drop_longitude"
-    },
-    {
-      "key_name": "route_distance",
-      "key_field_path": "$.['quotes'][*]['direction']['distanceInKms']",
-      "sanitizer": {
-        "function": "get_distance_in_meter"
-      }
-    },
-    {
-      "key_name": "drop_zone",
-      "key_field_path": "$.drop_zone"
-    },
-    {
-      "key_name": "drop_address",
-      "key_field_path": "$.['quotes'][*]['dropLocation']['address']"
     },
     {
       "key_name": "vehicle_category",
@@ -77,30 +46,8 @@
       "key_field_path": "$.quotes[*].['serviceId']"
     },
     {
-      "key_name": "vehicle_capacity",
-      "key_field_path": "$.quotes[*]",
-      "sanitizer": {
-        "function": "get_seat_capacity"
-      }
-    },
-    {
-      "key_name": "tag_line",
-      "key_field_path": "$.['quotes'][*]['serviceDisplayDescription']"
-    },
-    {
       "key_name": "upfront_fare",
       "key_field_path": "$.['quotes'][*]['amountBreakup']['displayableRideFare']['total']"
-    },
-    {
-      "key_name": "base_fare",
-      "key_field_path": "$.['quotes'][*]['amountBreakup']['baseFare']['total']"
-    },
-    {
-      "key_name": "is_fixed_fare",
-      "key_field_path": "$.['quotes'][*]['type']",
-      "sanitizer": {
-        "function": "parse_fixed_fare"
-      }
     },
     {
       "key_name": "vehicle_eta",
@@ -108,36 +55,6 @@
       "sanitizer": {
         "function": "get_vehicle_eta"
       }
-    },
-    {
-      "key_name": "per_minute_wait_charge",
-      "key_field_path": "$.['quotes'][*]['amountBreakup']['waitTimeCharges']['total']"
-    },
-    {
-      "key_name": "safe_ride_charge",
-      "key_field_path": "$.['quotes'][*]",
-      "sanitizer": {
-        "function": "get_safe_ride_charge"
-      }
-    },
-    {
-      "key_name": "per_distance_charge",
-      "key_field_path": "$.['quotes'][*]",
-      "sanitizer": {
-        "function": "get_per_distance_charge"
-      }
-    },
-    {
-      "key_name": "per_minute_ride_charge",
-      "key_field_path": "$.['quotes'][*]",
-      "sanitizer": {
-        "function": "per_minute_ride_charge"
-      }
-    },
-    {
-      "key_name": "route_id",
-      "key_field_path": "$.route_id",
-      "schema_overrides": true
     }
   ]
 }

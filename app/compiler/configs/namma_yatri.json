@@ -1,0 +1,60 @@
+{
+    "rival": "namma_yatri",
+    "client": "",
+    "country_code": [
+      "IN"
+    ],
+    "to_extract": [
+      {
+        "key_name": "source",
+        "key_field_path": "$.source"
+      },
+      {
+        "key_name": "country_code",
+        "key_field_path": "$.country_code"
+      },
+      {
+        "key_name": "city",
+        "key_field_path": "$.city"
+      },
+      {
+        "key_name": "route_type",
+        "key_field_path": "$.route_type"
+      },
+      {
+        "key_name": "pickup_latitude",
+        "key_field_path": "$.pickup_latitude"
+      },
+      {
+        "key_name": "pickup_longitude",
+        "key_field_path": "$.pickup_longitude"
+      },
+      {
+        "key_name": "drop_latitude",
+        "key_field_path": "$.drop_latitude"
+      },
+      {
+        "key_name": "drop_longitude",
+        "key_field_path": "$.drop_longitude"
+      },
+      {
+        "key_name": "vehicle_category",
+        "key_field_path": "$.estimates[*].serviceTierName"
+      },
+      {
+        "key_name": "vehicle_id",
+        "key_field_path": "$.estimates[*].vehicleVariant"
+      },
+      {
+        "key_name": "upfront_fare",
+        "key_field_path": "$.estimates[*].estimatedFare"
+      },
+      {
+        "key_name": "vehicle_eta",
+        "key_field_path": "$.estimates[*].estimatedFare",
+        "sanitizer": {
+          "function": "get_vehicle_eta"
+        }
+      }
+    ]
+  }

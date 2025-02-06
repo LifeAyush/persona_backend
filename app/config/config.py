@@ -1,5 +1,6 @@
 ENABLED_APPS = [
-    "rapido"
+    "rapido",
+    "namma_yatri",
 ]
 
 __all__ = [
