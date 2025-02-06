@@ -1,7 +1,9 @@
-from .response_schemas import (
-    FareResponse,
-)
+# from .response_schemas import (
+#     FareResponse,
+#     RivalResponse
+# )
 
-__all__ = [
-    "FareResponse",
-]
+# __all__ = [
+#     "FareResponse",
+#     "RivalResponse",
+# ]

@@ -54,7 +54,7 @@ class JsonDataExtractor():
                             
                             # Skip if `key_name` already exists in the dictionary
                             if key_name in extracted_data_dict:
-                                print(f"Key {key_name} already exists in extracted_data_dict, skipping", "info")
+                                # print(f"Key {key_name} already exists in extracted_data_dict, skipping", "info")
                                 continue
                             
                             # Parse JSONPath
@@ -105,7 +105,7 @@ class JsonDataExtractor():
                                     print(f"Error processing fallback value '{fall_back_value}': {e}", "error")
                             
                             extracted_data_dict[key_name] = temp_data
-                            print(f"Data extracted for {key_name}: {temp_data}", "info")
+                            # print(f"Data extracted for {key_name}: {temp_data}", "info")
                             
                         except Exception as e:
                             print(f"Error processing field {fields}: {e}", "error")
@@ -233,7 +233,7 @@ class JsonDataExtractor():
                         schema_overrides = fields.get("schema_override", None)
                         
                     if schema_overrides:
-                        print(f"Extracting schema override for {key_name}, type: {value_type}", "warning")
+                        # print(f"Extracting schema override for {key_name}, type: {value_type}", "warning")
                         keys[key_name] = {
                             "key": schema_overrides,
                             "type": value_type

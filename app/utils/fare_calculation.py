@@ -23,13 +23,6 @@ def fetch_fare(pickup_lat: float, pickup_long: float, drop_lat: float, drop_long
             futures[executor.submit(scraper.scrape, payload)] = app_name
         raw_data = {futures[future]: future.result() for future in as_completed(futures)}        
     
-    # with ThreadPoolExecutor(max_workers=8) as executor:
-    #     futures = {}
-    #     for app_name in ENABLED_APPS:
-    #         generic_compiler = GenericCompiler(app_name, raw_data)
-    #         compiled_data = generic_compiler.compile_data()
-    #         futures[executor.submit(generic_compiler.compile_data)] = app_name
-    #     compiled_data = {futures[future]: future.result() for future in as_completed(futures)}
     compiled_data = {}
     for app_name in ENABLED_APPS:
         generic_compiler = GenericCompiler(app_name, raw_data[app_name].get("raw_data", {}))

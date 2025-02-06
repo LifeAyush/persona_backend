@@ -1,36 +1,41 @@
 from fastapi import APIRouter, HTTPException
 from app.models.location_request import LocationRequest
-from app.schemas.response_schemas import FareResponse
 from app.utils.fare_calculation import fetch_fare
-from app.compiler.generic_compiler import GenericCompiler
+from app.delivery import convert_to_delivery_format
+from typing import Dict, Any
+import logging
 
 router = APIRouter()
+logging.basicConfig(level=logging.DEBUG)
 
-# @router.post("/get_fares", response_model=FareResponse)
-@router.post("/get_fares", )
-async def get_fares(request: LocationRequest):
+@router.post("/get_fares")
+async def get_fares(request: LocationRequest) -> dict:
     """
     Calculate estimated fare for a given route.
-    Example:
+    Example Route:
     {
         "pickup_lat": 12.949294,
         "pickup_long": 77.694598,
         "drop_lat": 12.950044,
-        "drop_long":  77.711044,
-        "country_code": "IN"
+        "drop_long": 77.711044,
+        "country_code": "IN",
+        "route_type":"client",
+        "city":"bengaluru"
     }
-    
     """
     try:
-        fare_details = fetch_fare(
+        fare_details: Dict[str, Any] = fetch_fare(
             request.pickup_lat,
             request.pickup_long,
             request.drop_lat,
             request.drop_long,
             request.country_code,
-            route_type = request.route_type
+            route_type=request.route_type
         )
-        return fare_details
+
+        modified_fare_details = convert_to_delivery_format(fare_details)  
+        return modified_fare_details
 
     except Exception as e:
+        logging.error(f"Error in get_fares: {e}")
         raise HTTPException(status_code=500, detail=str(e))

@@ -27,7 +27,7 @@ class SanitizerHandler:
         try:
             matches = re.search(regex_string, working_string)
             if matches:
-                print(f"Final string after regex: {matches[0]} for string {working_string}")
+                # print(f"Final string after regex: {matches[0]} for string {working_string}")
                 return matches[0]
             return None
         except Exception as e:
@@ -93,7 +93,7 @@ class SanitizerHandler:
         try:
             object = yaml_data["to_extract"][index]
             if "sanitizer" not in object:
-                print(f"No sanitizer found for {object['key_name']}")
+                # print(f"No sanitizer found for {object['key_name']}")
                 return value
 
             sanitizer = object["sanitizer"]
@@ -124,7 +124,7 @@ class SanitizerHandler:
                                 print(f"Missing dependencies for {object['key_name']}: {missing_deps}")
                             
                             try:
-                                print(f"Passing {value} and {required_values} into sanitizer function {config}")
+                                # print(f"Passing {value} and {required_values} into sanitizer function {config}")
                                 value = target_function(value, object['key_name'], **required_values)
                                 print(f"Result of function {config}: {value}")
                             except Exception as e:
@@ -135,15 +135,15 @@ class SanitizerHandler:
                                     value = target_function(fall_back_value, object['key_name'], **required_values)
                         else:
                             try:
-                                print(f"Passing {value} into sanitizer function {config}")
+                                # print(f"Passing {value} into sanitizer function {config}")
                                 value = target_function(value)
-                                print(f"Result of function {config}: {value}")
+                                # print(f"Result of function {config}: {value}")
                             except Exception as e:
                                 print(f"Error in sanitizer function '{config}': {str(e)}")
                                 return None
                     elif key == "conversion":
                         for conversion_type, details in config.items():
-                            print(f"Converting {value} from {details['from']} to {details['to']}")
+                            # print(f"Converting {value} from {details['from']} to {details['to']}")
                             if value is None:
                                 print(f"Value is None, skipping conversion for {object['key_name']}")
                                 continue
@@ -206,7 +206,7 @@ class SanitizerHandler:
 
             try:
                 iterate = self.utils.get_iterate(extracted_data, is_serviceable)
-                print(f"Started creating compile data using: {iterate}")
+                # print(f"Started creating compile data using: {iterate}")
             except Exception as e:
                 print(f"Error getting iterate: {str(e)}")
                 return None
@@ -228,7 +228,7 @@ class SanitizerHandler:
                             value = extracted_data.get(key, [])
                             fallback_value = extracted_data.get(f'{key}_fallback', None)
                             
-                            print(f"Processing key:{key}, value:{str(value)[:100]}")
+                            # print(f"Processing key:{key}, value:{str(value)[:100]}")
                             
                             if len(value) not in [1, len(iterate)]:
                                 print(f"Invalid value length for key:{key}, value:{value}")
@@ -290,7 +290,7 @@ class SanitizerHandler:
                     print(f"Error processing row {i}: {str(e)}")
                     continue
 
-            print(f"Completed creating compile data using: {iterate}")
+            # print(f"Completed creating compile data using: {iterate}")
             return {
                 "compiled_data": compiled_data,
                 "error_count": error_count,
