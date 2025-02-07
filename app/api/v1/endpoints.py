@@ -32,7 +32,6 @@ async def get_fares(request: LocationRequest) -> dict:
             request.country_code,
             route_type=request.route_type
         )
-
         modified_fare_details = convert_to_delivery_format(fare_details)  
         return modified_fare_details
 

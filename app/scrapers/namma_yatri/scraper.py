@@ -71,8 +71,6 @@ class Scraper(BaseScraper):
     def _get_data(self, route, search_id):
         try:
             raw_data = self._get_fare_estimate(search_id)
-            response = self._fill_response(raw_data, route, search_id)
-            self._save_compressed_response(response, route)
             return raw_data
             
         except Exception as e:
@@ -82,13 +80,14 @@ class Scraper(BaseScraper):
     def _get_fare_estimate(self, search_id):
         headers = self._build_headers()
         url = f"{self.BASE_URL}/{search_id}/results"
-        
-        for attempt in range(3):
+        for attempt in range(10):
             try:
+                print(f"Attempt {attempt + 1} to fetch fare estimate: url: {url}")
                 response = requests.get(url, headers=headers)
                 if response.status_code == 200:
+                    if not response.json().get("estimates", []) :
+                        continue
                     return response.json()
-                logging.warning(f"Attempt {attempt + 1} failed with status code: {response.status_code}")
             except Exception as e:
                 logging.error(f"Attempt {attempt + 1} failed: {e}")
                 
@@ -116,43 +115,4 @@ class Scraper(BaseScraper):
             "connection": "Keep-Alive",
             "accept-encoding": "gzip"
         }
-        
-    def _fill_response(self, response, route_data, search_id):
-        try:
-            response.update({
-                'source': "namma_yatri",
-                'search_id': search_id,
-                'session_id': self.session_id,
-                'client_id': self.client_id,
-                'pickup_zone': route_data.get("pickup_zone"),
-                'pickup_latitude': route_data.get("pickup_latitude"),
-                'pickup_longitude': route_data.get("pickup_longitude"),
-                'drop_latitude': route_data.get("drop_latitude"),
-                'drop_longitude': route_data.get("drop_longitude"),
-                'drop_zone': route_data.get("drop_zone"),
-                'city': route_data.get("city"),
-                'country_code': route_data.get("country_code"),
-                'route_type': route_data.get("route_type"),
-                'scraped_at_hour': self.current_hour,
-                'scraped_at_timestamp': self.current_timestamp,
-                'client': "nammayatri",
-                'payload_distance': route_data.get('distance'),
-                'route_id': f'{self.current_hour}-{route_data.get("pickup_latitude")}-{route_data.get("pickup_longitude")}-{route_data.get("drop_latitude")}-{route_data.get("drop_longitude")}'
-            })
-            return response
-        except Exception as e:
-            logging.error(f"Response filling failed for search ID {search_id}: {e}")
-            return response
-            
-    def _save_compressed_response(self, response, route):
-        filename = f"{route.get('pickup_latitude')}_{route.get('pickup_longitude')}_{route.get('drop_latitude')}_{route.get('drop_longitude')}.json.gz"
-        directory = f"{self.base_folder}/raw/{self.current_date}/{self.current_time}"
-        file_path = f"{directory}/{filename}"
-        
-        try:
-            compressed_data = gzip.compress(json.dumps(response).encode('utf-8'))
-            with open(file_path, "wb") as file:
-                file.write(compressed_data)
-            logging.info(f"Compressed response saved: {file_path}")
-        except Exception as e:
-            logging.error(f"Failed to save compressed response: {e}")
+    

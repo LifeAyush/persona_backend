@@ -32,9 +32,7 @@ class Scraper(BaseScraper):
     def _setup_directories(self):
         self.base_folder = "data/rapido"
         folders = [
-            f"{self.base_folder}/raw/{self.current_date}/{self.current_time}",
-            f"{self.base_folder}/compile/{self.current_date}/{self.current_time}",
-            f"{self.base_folder}/compressed"
+            f"{self.base_folder}/raw/{self.current_date}/{self.current_time}"
         ]
         for folder in folders:
             self._create_directory(folder)
@@ -60,9 +58,6 @@ class Scraper(BaseScraper):
                 route.get('drop_longitude'),
                 route.get('city')
             )
-            
-            response = self._fill_response(raw_data, route)
-            self._save_compressed_response(response, route)
             return raw_data
             
         except Exception as e:
@@ -134,39 +129,4 @@ class Scraper(BaseScraper):
             "skipSnapToRoad": True
         }
         
-    def _fill_response(self, response, route_data):
-        try:
-            response.update({
-                'source': "rapido",
-                'pickup_zone': route_data.get("pickup_zone"),
-                'pickup_latitude': route_data.get("pickup_latitude"),
-                'pickup_longitude': route_data.get("pickup_longitude"),
-                'drop_latitude': route_data.get("drop_latitude"),
-                'drop_longitude': route_data.get("drop_longitude"),
-                'drop_zone': route_data.get("drop_zone"),
-                'city': route_data.get("city"),
-                'country_code': route_data.get("country_code"),
-                'route_type': route_data.get("route_type"),
-                'scraped_at_hour': self.current_hour,
-                'scraped_at_timestamp': self.current_timestamp,
-                'client': "namma_yatri",
-                'payload_distance': route_data.get('distance'),
-                'route_id': f'{self.current_hour}-{route_data.get("pickup_latitude")}-{route_data.get("pickup_longitude")}-{route_data.get("drop_latitude")}-{route_data.get("drop_longitude")}'
-            })
-            return response
-        except Exception as e:
-            logging.error(f"Response filling failed for coordinates {route_data.get('pickup_latitude')}, {route_data.get('pickup_longitude')}: {e}")
-            return response
             
-    def _save_compressed_response(self, response, route):
-        filename = f"{route.get('pickup_latitude')}_{route.get('pickup_longitude')}_{route.get('drop_latitude')}_{route.get('drop_longitude')}.json.gz"
-        directory = f"{self.base_folder}/raw/{self.current_date}/{self.current_time}"
-        file_path = f"{directory}/{filename}"
-        
-        try:
-            compressed_data = gzip.compress(json.dumps(response).encode('utf-8'))
-            with open(file_path, "wb") as file:
-                file.write(compressed_data)
-            logging.info(f"Compressed response saved: {file_path}")
-        except Exception as e:
-            logging.error(f"Failed to save compressed response: {e}")
