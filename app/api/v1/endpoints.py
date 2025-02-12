@@ -13,15 +13,17 @@ async def get_fares(request: LocationRequest) -> dict:
     """
     Calculate estimated fare for a given route.
     Example Route:
-    {
-        "pickup_lat": 12.949294,
-        "pickup_long": 77.694598,
-        "drop_lat": 12.950044,
-        "drop_long": 77.711044,
-        "country_code": "IN",
-        "route_type":"client",
-        "city":"bengaluru"
-    }
+    ```
+        {
+            "pickup_lat": 12.949294,
+            "pickup_long": 77.694598,
+            "drop_lat": 12.950044,
+            "drop_long": 77.711044,
+            "country_code": "IN",
+            "city": "",
+            "route_type": ""
+        }
+    ```
     """
     try:
         fare_details: Dict[str, Any] = fetch_fare(
@@ -36,5 +38,5 @@ async def get_fares(request: LocationRequest) -> dict:
         return modified_fare_details
 
     except Exception as e:
-        logging.error(f"Error in get_fares: {e}")
+        logging.error(f"Error in get_fares: {e}\nStacktrace:\n{traceback.format_exc()}")
         raise HTTPException(status_code=500, detail=str(e))

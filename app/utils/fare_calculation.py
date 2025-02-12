@@ -21,12 +21,16 @@ def fetch_fare(pickup_lat: float, pickup_long: float, drop_lat: float, drop_long
                 'route_type': kwargs.get("route_type", "client")
             }
             futures[executor.submit(scraper.scrape, payload)] = app_name
-        raw_data = {futures[future]: future.result() for future in as_completed(futures)}        
-    
+        raw_data = {futures[future]: future.result() for future in as_completed(futures)}
+
     compiled_data = {}
     for app_name in ENABLED_APPS:
-        generic_compiler = GenericCompiler(app_name, raw_data[app_name].get("raw_data", {}))
-        compiled_data[app_name] = generic_compiler.compile_data()
+        print(raw_data[app_name].get("raw_data", {}))
+        if not raw_data[app_name].get("raw_data", {}):
+            compiled_data[app_name] = {}
+        else:
+            generic_compiler = GenericCompiler(app_name, raw_data[app_name].get("raw_data", {}))
+            compiled_data[app_name] = generic_compiler.compile_data()
     return compiled_data
 
 __all__ = [

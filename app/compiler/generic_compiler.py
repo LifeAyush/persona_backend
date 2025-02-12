@@ -23,6 +23,8 @@ class GenericCompiler:
         json_data_extractor (JsonDataExtractor): Instance of JsonDataExtractor class
         sanitizer_handler (SanitizerHandler): Instance of SanitizerHandler class
     """
+    
+    logger = logging.getLogger(__name__)
 
     def __init__(self, source: str, raw_data: dict):
         """
