@@ -1,5 +1,8 @@
-fastapi
-uvicorn
-pydantic
-pytest
+fastapi==0.115.11
+uvicorn==0.34.0
+pydantic==2.10.6
+pytest==8.3.5
 pyyaml==6.0.2
+jsonpath-ng==1.7.0
+jsonschema==4.23.0
+requests==2.32.3

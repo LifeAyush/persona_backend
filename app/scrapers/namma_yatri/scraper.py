@@ -1,6 +1,4 @@
 import os
-import gzip
-import json
 import logging
 import uuid
 import requests

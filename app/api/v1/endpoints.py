@@ -4,6 +4,7 @@ from app.utils.fare_calculation import fetch_fare
 from app.delivery import convert_to_delivery_format
 from typing import Dict, Any
 import logging
+import traceback
 
 router = APIRouter()
 logging.basicConfig(level=logging.DEBUG)

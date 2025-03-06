@@ -1,6 +1,4 @@
 import os
-import gzip
-import json
 import logging
 import random
 import requests
@@ -47,6 +45,7 @@ class Scraper(BaseScraper):
     def scrape(self, route: dict, account_manager: object = None) -> dict:
         logging.info(f"Starting scrape for coordinates: {route.get('pickup_latitude')}, {route.get('pickup_longitude')}")
         raw_data = self._get_data(route)
+        print(raw_data)
         return {"raw_data": raw_data}
     
     def _get_data(self, route):
@@ -70,12 +69,6 @@ class Scraper(BaseScraper):
         
         for attempt in range(3):
             try:
-                print(f"Attempt {attempt + 1}: Fetching fare estimate for coordinates: \
-                    Pickup coordinates: {pickup_lat}, {pickup_lng} \
-                    Drop coordinates: {drop_lat}, {drop_lng} \
-                    headers: {headers} \
-                    payload: {payload} \
-                    url: {self.BASE_URL}")
                 response = requests.post(self.BASE_URL, headers=headers, json=payload)
                 if response.status_code == 200:
                     return response.json()

@@ -1,0 +1,57 @@
+{
+    "rival": "ola",
+    "client": "",
+    "country_code": [
+      "IN"
+    ],
+    "to_extract": [
+      {
+        "key_name": "source",
+        "key_field_path": "$",
+        "sanitizer": {
+          "function": "ola"
+        }
+      },
+      {
+        "key_name": "route_type",
+        "key_field_path": "$",
+        "sanitizer": {
+          "function": "client"
+        }
+      },
+      {
+        "key_name": "pickup_latitude",
+        "key_field_path": "$.pickup_latitude"
+      },
+      {
+        "key_name": "pickup_longitude",
+        "key_field_path": "$.pickup_longitude"
+      },
+      {
+        "key_name": "drop_latitude",
+        "key_field_path": "$.drop_latitude"
+      },
+      {
+        "key_name": "drop_longitude",
+        "key_field_path": "$.drop_longitude"
+      },
+      {
+        "key_name": "vehicle_category",
+        "key_field_path": "$.flattened_data[*].display_name"
+      },
+      {
+        "key_name": "upfront_fare",
+        "key_field_path": "$.flattened_data[*]",
+        "sanitizer": {
+          "function": "get_vehicle_fare"
+        }
+      },
+      {
+        "key_name": "vehicle_eta",
+        "key_field_path": "$.flattened_data[*]",
+        "sanitizer": {
+          "function": "get_vehicle_eta"
+        }
+      }
+    ]
+  }
