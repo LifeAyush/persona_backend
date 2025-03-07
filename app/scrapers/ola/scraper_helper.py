@@ -107,6 +107,11 @@ class ScraperHelper:
                     "price_enabled": True,
                     "eta_challenge": False
                 },
+                "auto": {
+                    "eta_enabled": True,
+                    "price_enabled": True,
+                    "eta_challenge": False
+                },
                 "kp": {
                     "eta_enabled": True,
                     "price_enabled": True,
