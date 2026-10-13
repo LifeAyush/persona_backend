@@ -218,7 +218,10 @@ class ScraperHelper:
     def refresh_token(cls):
         try:
             url = "https://apps.olacabs.com/v1/tokens/refresh"
-            payload = "{\"auth_refresh_token\":\"\",\"install_id\":\"\"}"
+            payload = json.dumps({
+                "auth_refresh_token": os.environ.get("OLA_REFRESH_TOKEN", ""),
+                "install_id": os.environ.get("OLA_INSTALL_ID", ""),
+            })
             headers = {
                 "app_version": "7.1.2",
                 "device_id": "dDYSwbaETE-QzbP_wp_rD0",
