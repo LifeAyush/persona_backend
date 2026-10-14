@@ -42,6 +42,7 @@ Arun Singh built the Rapido scraper, the compiled fare response, CORS, and the d
    export OLA_ACCESS_TOKEN=""
    export OLA_USER_TOKEN=""
    export OLA_REFRESH_TOKEN=""
+   export OLA_INSTALL_ID=""
    export NAMMA_YATRI_TOKEN=""
    ```
 

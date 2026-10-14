@@ -1,7 +1,8 @@
 import os
 import json
-import time
 import requests
+
+from .tokens import tokens_list
 
 class ScraperHelper:
     MAX_RETRIES = 3 
@@ -198,18 +199,17 @@ class ScraperHelper:
             "discovery_tab": "daily"
         }
     
-    @classmethod 
-    def update_token_in_storage(cls, token_file: str = f"app/scrapers/ola/tokens.py"):
+    @classmethod
+    def update_token_in_storage(cls):
         try:
             access_token_data = cls.refresh_token()
-            new_token_data = {
-                "time_generated": int(time.time()),
-                **access_token_data
-            }
-            with open(token_file, "w") as token_file:
-                token_file.write(f"tokens_list = {json.dumps([new_token_data], indent=4)}")
+            access_token = access_token_data.get("access_token")
+            if tokens_list:
+                tokens_list[0]["access_token"] = access_token
+            else:
+                tokens_list.append({"access_token": access_token})
             return {
-                "token": access_token_data.get("access_token")
+                "token": access_token
             }
         except Exception as e:
             raise e
